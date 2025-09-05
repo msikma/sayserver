@@ -1,0 +1,62 @@
+{
+  "name": "@dada78641/sayserver",
+  "description": "Web service for generating TTS (text-to-speech)",
+  "version": "0.1.0",
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.js"
+      },
+      "require": {
+        "types": "./dist/index.d.ts",
+        "default": "./dist/index.cjs"
+      }
+    }
+  },
+  "scripts": {
+    "serve": "node dist/server.js",
+    "build": "tsup",
+    "watch": "tsup --watch src",
+    "check": "tsc -p ./tsconfig.json --noEmit",
+    "test": "vitest run",
+    "lint": "eslint ./src"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "files": [
+    "dist",
+    "readme.md"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/msikma/sayserver.git"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@dada78641/eslint-config": "^1.0.1",
+    "@types/ajv": "^0.0.5",
+    "@types/command-exists": "^1.2.3",
+    "@types/dotenv": "^6.1.1",
+    "@types/express": "^5.0.3",
+    "@types/node": "^24.3.0",
+    "eslint": "^9.34.0",
+    "jiti": "^2.5.1",
+    "tsup": "^8.5.0",
+    "typescript": "^5.9.2",
+    "vitest": "^3.2.4"
+  },
+  "dependencies": {
+    "@dada78641/strim-prng": "^0.1.0",
+    "ajv": "^8.17.1",
+    "command-exists": "^1.2.9",
+    "dotenv": "^17.2.2",
+    "express": "^5.1.0",
+    "tmp-promise": "^3.0.3"
+  }
+}
