@@ -10,7 +10,7 @@ export const voiceSets: VoiceSets = {
       'Bad News',
       {
         name: 'Bells',
-        params: {rate: 1.25}
+        params: {rate: 225}
       },
       // 'Boing',
       // 'Bubbles',
@@ -25,7 +25,7 @@ export const voiceSets: VoiceSets = {
     ],
     gender: 'none',
     generation: 1,
-    params: {volume: 1, rate: 1, pitch: 0}
+    params: {volume: 1, rate: 180, pitch: 0}
   },
 
   // Generation 1 voices from Classic Mac OS
@@ -38,7 +38,7 @@ export const voiceSets: VoiceSets = {
     ],
     gender: 'male',
     generation: 1,
-    params: {volume: 1, rate: 1, pitch: 0}
+    params: {volume: 1, rate: 180, pitch: 0}
   },
   'gen1_female': {
     voices: [
@@ -50,7 +50,7 @@ export const voiceSets: VoiceSets = {
     ],
     gender: 'female',
     generation: 1,
-    params: {volume: 1, rate: 1, pitch: 0}
+    params: {volume: 1, rate: 180, pitch: 0}
   },
 
   // Generation 2 voices from modern macOS
@@ -65,7 +65,7 @@ export const voiceSets: VoiceSets = {
     ],
     gender: 'male',
     generation: 2,
-    params: {volume: 0.8, rate: 1, pitch: 0}
+    params: {volume: 0.8, rate: 180, pitch: 0}
   },
   'gen2_female': {
     voices: [
@@ -85,6 +85,6 @@ export const voiceSets: VoiceSets = {
     ],
     gender: 'female',
     generation: 2,
-    params: {volume: 0.8, rate: 1, pitch: 0}
+    params: {volume: 0.8, rate: 180, pitch: 0}
   },
 }

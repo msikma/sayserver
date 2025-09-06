@@ -1,7 +1,7 @@
 // @dada78641/sayserver <https://github.com/msikma/sayserver>
 // © MIT license
 
-import type {Command} from './types.ts'
+import type {Command} from '../types.ts'
 
 /**
  * Returns a command for compressing an audio file for transfer.
