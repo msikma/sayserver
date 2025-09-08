@@ -36,6 +36,13 @@ function stripCommandTags(prompt: string) {
 }
 
 /**
+ * Splits a prompt string by lines.
+ */
+function splitPrompt(prompt: string) {
+  return prompt.split(/\n|\. /)
+}
+
+/**
  * Returns a utterance prompt that includes all settings in the form of tags.
  * 
  * This function does two things: it sanitizes the input (removes all tags that might be in the prompt)
@@ -50,7 +57,9 @@ export function getUtterancePrompt(prompt: string, params: VoiceParams, useVolum
     getCommandTag('pbas', params.pitch, '+', usePitch),
   ]
   const commandTags = commands.filter(h => h).join('')
-  return stripCommandTags(prompt).split('\n').map(line => `${getResetTag()} ${commandTags} ${line}`).join(' ')
+  const sanitizedPrompt = stripCommandTags(prompt)
+  const promptLines = splitPrompt(sanitizedPrompt)
+  return promptLines.map(line => `${getResetTag()} ${commandTags} ${line}`).join(' ')
 }
 
 /**

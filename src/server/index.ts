@@ -1,10 +1,11 @@
 // @dada78641/sayserver <https://github.com/msikma/sayserver>
 // © MIT license
 
-import fs from 'node:fs'
+import fs from 'node:fs/promises'
 import path from 'node:path'
 import zlib from 'node:zlib'
 import express, {Request, Response} from 'express'
+import cors from 'cors'
 import dotenv from 'dotenv'
 import {Controller} from '../tts/index.ts'
 import {getProviderInfo} from '../tts/providers/index.ts'
@@ -17,7 +18,15 @@ dotenv.config({quiet: true})
 const app = express()
 const port = process.env.PORT ?? '8227'
 
+app.use(cors())
 app.use(express.json())
+
+if (process.argv.includes('--serve-test-endpoint')) {
+  app.get('/test', async (req: Request, res: Response) => {
+    const docs = await fs.readFile(path.join(import.meta.dirname, '..', 'docs', 'index.html'), 'utf8')
+    res.send(docs)
+  })
+}
 
 app.get('/api/voices', (req: Request, res: Response) => {
   const data = getProviderInfo()

@@ -2,9 +2,237 @@
 <html>
 <head>
   <title>SayServer - Testing page</title>
+  <style>
+    label[for="service"] {
+      font-weight: bold;
+    }
+    .voice-options {
+      display: flex;
+      flex-direction: row;
+    }
+    .voice-options > fieldset {
+      display: grid;
+      grid-template-rows: repeat(8, auto);
+      grid-auto-flow: column;
+    }
+    .test-columns {
+      display: grid;
+      grid-template-columns: auto 1fr;
+    }
+    .result-fieldset {
+      background-color: #ddd;
+    }
+    .error {
+      color: red;
+    }
+    .metadata th {
+      text-align: left;
+    }
+  </style>
 </head>
 <body>
-  <h1>SayServer tester</h1>
-  <p>Not implemented yet.</p>
+  <h1>SayServer testing page</h1>
+
+  <form id="testform">
+    <label for="service">Service:</label>
+    <select id="service" name="service">
+      <option value="">Select a service</option>
+    </select>
+    <hr />
+    
+    <div class="test-columns">
+      <div class="test-options">
+        <fieldset id="" class="">
+          <legend>Options</legend>
+          <label for="seed">Seed:</label>
+          <input type="text" id="seed" name="seed" value="Username"><br><br>
+
+          <label for="prompt">Prompt:</label><br>
+          <textarea id="prompt" name="prompt" rows="4" cols="50">This is a TTS test.</textarea><br><br>
+
+          <button type="submit" id="submit">Submit</button>
+          <span class="error"></span>
+        </fieldset>
+
+        <div class="voice-options">
+          <fieldset id="service-sets" class="">
+            <legend>Set:</legend>
+          </fieldset>
+          <fieldset id="service-voices" class="">
+            <legend>Voices:</legend>
+          </fieldset>
+        </div>
+      </div>
+      <div class="result">
+        <fieldset id="" class="result-fieldset">
+          <legend>Results</legend>
+          <div id="results">
+          </div>
+        </fieldset>
+      </div>
+    </div>
+  </form>
 </body>
+<script>
+  function runTestPage() {
+    const serviceData = {
+      services: null,
+      selectedService: null
+    }
+    const form = document.querySelector('#testform')
+    const result = document.querySelector('#results')
+
+    function setError(reason) {
+      document.querySelector('.error').innerText = reason
+    }
+
+    function getVoice() {
+      const voice = form.querySelector('input[name="voice"]:checked');
+      if (!voice) {
+        return null
+      }
+      return voice.value
+    }
+
+    function getSets() {
+      const sets = [...form.querySelectorAll('input[name="set"]:checked')]
+      return sets.filter(checkbox => checkbox.checked).map(checkbox => checkbox.value)
+    }
+
+    function makeMetadataTable(data) {
+      console.log(data)
+      const metadata = data.metadata
+      const utterance = data.utterance
+      return `
+        <table border="2" class="metadata">
+          <tr>
+            <th>Codec name</th><td>${metadata.codecName}</td>
+          </tr>
+          <tr>
+            <th>Format name</th><td>${metadata.formatName}</td>
+          </tr>
+          <tr>
+            <th>Duration</th><td>${metadata.duration} sec</td>
+          </tr>
+          <tr>
+            <th>Size</th><td>${metadata.size} bytes</td>
+          </tr>
+          <tr>
+            <th>Resolved voice</th><td>${utterance.resolvedVoice.name}</td>
+          </tr>
+          <tr>
+            <th>Prompt</th><td><code>${utterance.prompt}</code></td>
+          </tr>
+        </table>
+      `
+    }
+
+    async function fetchTTS(seed, prompt, service, voice, sets) {
+      const payload = {
+        seed,
+        prompt,
+        service,
+        voice: voice ? voice : [],
+        set: sets
+      }
+      const start = Date.now()
+      const res = await fetch(`http://localhost:8227/api/generate`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      const data = await res.json()
+      const end = Date.now()
+      console.log('Generation complete. Time taken: %o.', end - start)
+
+      const table = makeMetadataTable(data.output)
+      const audio = document.createElement('audio');
+      audio.src = `data:audio/ogg;base64,${data.output.audio}`;
+      audio.controls = true;
+
+      result.innerHTML = '';
+      result.appendChild(audio);
+      result.insertAdjacentHTML('beforeend', table);
+      audio.play()
+    }
+
+    function requestTTS() {
+      setError('')
+      const seed = document.querySelector('#seed').value.trim()
+      const prompt = document.querySelector('#prompt').value.trim()
+      if (prompt === '') {
+        return setError('Please add a prompt.')
+      }
+      const voice = getVoice()
+      const sets = getSets()
+      if (voice == null && sets.length === 0) {
+        return setError('Select at least one voice or set.')
+      }
+      const service = serviceData.selectedService
+      console.log('Requesting TTS:\n%o', {seed, prompt, service, voice, sets})
+      fetchTTS(seed, prompt, service, voice, sets)
+    }
+
+    function serviceCallback() {
+      const selectedService = this.value;
+      if (selectedService === '') {
+        return
+      }
+      serviceData.selectedService = selectedService
+      populateService()
+    }
+
+    function populateService() {
+      const service = serviceData.services[serviceData.selectedService]
+
+      const setItems = []
+      setItems.push(`<legend>Set:</legend>`)
+      for (const set of service.sets) {
+        setItems.push(` <label><input type="checkbox" name="set" value="${set}"> ${set}</label>`)
+      }
+
+      const voiceItems = []
+      voiceItems.push(`<legend>Voice:</legend>`)
+      for (const voice of service.voices) {
+        voiceItems.push(` <label><input type="radio" name="voice" value="${voice}"> ${voice}</label>`)
+      }
+      
+      document.querySelector(`#service-sets`).innerHTML = setItems.join('')
+      document.querySelector(`#service-voices`).innerHTML = voiceItems.join('')
+      const firstSet = form.querySelector('#service-sets input[type="checkbox"]')
+      firstSet.checked = true
+    }
+
+    function setup() {
+      const firstItem = Object.keys(serviceData.services)[0]
+      const serviceDropdown = document.querySelector(`#service`)
+      const options = []
+      options.push(`<option value="">Select a service</option>`)
+      for (const [name, data] of Object.entries(serviceData.services)) {
+        options.push(`<option value="${name}">${name} (${data.type})</option>`)
+      }
+      serviceDropdown.innerHTML = options.join('')
+      serviceDropdown.addEventListener('change', serviceCallback);
+      serviceDropdown.value = firstItem
+      serviceData.selectedService = firstItem
+      populateService()
+      document.querySelector('#submit').addEventListener('click', ev => {
+        ev.preventDefault();
+        requestTTS()
+      });
+    }
+
+    async function updateServices() {
+      const res = await fetch('http://localhost:8227/api/voices')
+      const services = await res.json()
+      serviceData.services = services
+      setup()
+    }
+
+    updateServices()
+  }
+  runTestPage()
+</script>
 </html>

@@ -37,7 +37,7 @@ export class Controller {
         const compressed = await this.compressAudio(utterance.target, this.getFinalFilename(tmpDir.path), provider.type)
         const metadata = await this.probeMetadata(compressed.target)
 
-        const result = await this.wrapUtteranceResult(compressed.target, metadata, prompt, seed, settings, provider, voice)
+        const result = await this.wrapUtteranceResult(compressed.target, metadata, utterance.prompt, seed, settings, provider, voice)
         utteranceResult = result
       },
       {

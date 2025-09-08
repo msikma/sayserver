@@ -20,6 +20,7 @@
   },
   "scripts": {
     "serve": "node dist/server.js",
+    "serve-test": "node dist/server.js --serve-test-endpoint",
     "build": "tsup",
     "watch": "tsup --watch src",
     "check": "tsc -p ./tsconfig.json --noEmit",
@@ -42,6 +43,7 @@
     "@dada78641/eslint-config": "^1.0.1",
     "@types/ajv": "^0.0.5",
     "@types/command-exists": "^1.2.3",
+    "@types/cors": "^2.8.19",
     "@types/dotenv": "^6.1.1",
     "@types/express": "^5.0.3",
     "@types/node": "^24.3.0",
@@ -55,6 +57,7 @@
     "@dada78641/strim-prng": "^0.1.0",
     "ajv": "^8.17.1",
     "command-exists": "^1.2.9",
+    "cors": "^2.8.5",
     "dotenv": "^17.2.2",
     "express": "^5.1.0",
     "tmp-promise": "^3.0.3"

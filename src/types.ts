@@ -61,7 +61,7 @@ export type AudioMetadata = {
 
 export interface LocalProvider {
   type: string
-  generateUtterance: (dir: string, voice: Voice, prompt: string) => Promise<{target: string, cmd: string[]}>
+  generateUtterance: (dir: string, voice: Voice, prompt: string) => Promise<{target: string, cmd: string[], prompt: string}>
   getVoiceSets: () => VoiceSets
 }
 

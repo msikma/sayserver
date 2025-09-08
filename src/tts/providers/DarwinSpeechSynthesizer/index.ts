@@ -3,6 +3,7 @@
 
 import {voiceSets} from './sets.ts'
 import {generateUtterance} from './cmds.ts'
+import {getUtterancePrompt} from './parse.ts'
 import {runCommand} from '../../../util/exec.ts'
 import type {LocalProvider, Voice} from '../../../types.ts'
 
@@ -12,14 +13,16 @@ export default class DarwinSpeechSynthesizer implements LocalProvider {
   private _bin: string = 'say'
 
   async generateUtterance(target: string, voice: Voice, prompt: string) {
-    const cmd = generateUtterance(this._bin, voice, target, prompt)
+    const sanitizedPrompt = getUtterancePrompt(prompt, voice.params)
+    const cmd = generateUtterance(this._bin, voice, target, sanitizedPrompt)
     const res = await runCommand(cmd)
     if (res.exitCode !== 0) {
       throw new Error('generation failed')
     }
     return {
       target,
-      cmd
+      cmd,
+      prompt: sanitizedPrompt
     }
   }
 
