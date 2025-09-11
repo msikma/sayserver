@@ -2,9 +2,13 @@
 // © MIT license
 
 import DarwinSpeechSynthesizerProvider from '../providers/DarwinSpeechSynthesizer/index.ts'
-import type {LocalProviderConstructor, LocalProviderInfo} from '../../types.ts'
+import StreamlabsAmazonPollyProvider from '../providers/StreamlabsAmazonPolly/index.ts'
+import type {ProviderConstructor, LocalProviderInfo} from '../../types.ts'
 
-export const providers: LocalProviderConstructor[] = [DarwinSpeechSynthesizerProvider]
+export const providers: ProviderConstructor[] = [
+  DarwinSpeechSynthesizerProvider,
+  StreamlabsAmazonPollyProvider,
+]
 
 export function getProviderInfo() {
   const services: {[key: string]: LocalProviderInfo['data']} = {}
@@ -21,7 +25,7 @@ export function getProviderInfo() {
 /**
  * Returns provider by a given name.
  */
-export function findProvider(identifier: string): LocalProviderConstructor {
+export function findProvider(identifier: string): ProviderConstructor {
   for (const provider of providers) {
     if (provider.name !== identifier) {
       continue

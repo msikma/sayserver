@@ -111,6 +111,12 @@ export class Controller {
   }
 
   private async compressAudio(inputPath: string, outputPath: string, providerType: string) {
+    if (providerType === 'remote') {
+      return {
+        target: inputPath,
+        cmd: []
+      }
+    }
     const cmd = compressAudioFile(this._binMpeg, inputPath, outputPath)
     const res = await runCommand(cmd)
     if (res.exitCode !== 0) {

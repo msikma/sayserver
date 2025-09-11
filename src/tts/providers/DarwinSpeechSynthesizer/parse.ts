@@ -9,8 +9,8 @@ import type {VoiceParams} from '../../../types.ts'
  * A command tag is used to fine tune the way a line is spoken in an utterance.
  * The value sign can be an empty string, "+" or "-". We typically only use it for pitch.
  */
-function getCommandTag(type: string, value: number = 1, valueSign: string = '', useValue: boolean = true) {
-  if (useValue === false) {
+function getCommandTag(type: string, value: number | null = 1, valueSign: string = '', useValue: boolean = true) {
+  if (useValue === false || value == null) {
     return null
   }
   const clampedValue = Math.min(Math.max(value, 0), 10000)
@@ -52,9 +52,9 @@ function splitPrompt(prompt: string) {
 export function getUtterancePrompt(prompt: string, params: VoiceParams, useVolume = false, usePitch = false, useRate = true) {
   // The commands that precede all lines in the prompt.
   const commands = [
-    getCommandTag('volm', params.volume, '', useVolume),
-    getCommandTag('rate', params.rate, '', useRate),
-    getCommandTag('pbas', params.pitch, '+', usePitch),
+    getCommandTag('volm', params?.volume, '', useVolume),
+    getCommandTag('rate', params?.rate, '', useRate),
+    getCommandTag('pbas', params?.pitch, '+', usePitch),
   ]
   const commandTags = commands.filter(h => h).join('')
   const sanitizedPrompt = stripCommandTags(prompt)

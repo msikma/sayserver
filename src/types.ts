@@ -1,21 +1,22 @@
 // @dada78641/sayserver <https://github.com/msikma/sayserver>
 // © MIT license
 
-export type VoiceParams = {volume?: number, rate?: number, pitch?: number, language?: string}
+export type VoiceParams = {volume?: number, rate?: number, pitch?: number, language?: string} | null
+
+export type VoiceInfo = {
+  gender: string
+  generation: number | null
+}
 
 export type VoiceSet = {
   voices: (string | PartialVoice)[]
-  gender: string
-  generation: number
   params: VoiceParams
-}
+} & VoiceInfo
 
 export type Voice = {
   name: string
-  gender: string
-  generation: number
   params: VoiceParams
-}
+} & VoiceInfo
 
 export type PartialVoice = Partial<Voice>
 
@@ -65,6 +66,12 @@ export interface LocalProvider {
   getVoiceSets: () => VoiceSets
 }
 
+export interface RemoteProvider {
+  type: string
+  generateUtterance: (dir: string, voice: Voice, prompt: string) => Promise<{target: string, cmd: string[], prompt: string}>
+  getVoiceSets: () => VoiceSets
+}
+
 export interface LocalProviderInfo {
   name: string
   data: {
@@ -74,7 +81,7 @@ export interface LocalProviderInfo {
   }
 }
 
-export interface LocalProviderConstructor {
+export interface ProviderConstructor {
   new (): LocalProvider
   getVoiceSetInfo(): LocalProviderInfo
   isUsable(): boolean

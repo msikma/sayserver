@@ -15,13 +15,19 @@ export const voiceSets: VoiceSets = {
       // 'Boing',
       // 'Bubbles',
       // 'Bahh',
-      'Cellos',
+      {
+        name: 'Cellos',
+        params: {rate: 225}
+      },
       'Good News',
       'Trinoids',
       // 'Jester',
       'Zarvox',
       // 'Whisper',
-      'Pipe Organ',
+      {
+        name: 'Organ',
+        params: {rate: 225}
+      },
     ],
     gender: 'none',
     generation: 1,

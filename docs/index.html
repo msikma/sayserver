@@ -32,7 +32,8 @@
 </head>
 <body>
   <h1>SayServer testing page</h1>
-
+  <p>If you're running this from the github.io page, you need to have the server running in a browser with web security disabled.</p><p>Otherwise, run this server using <code>npm run serve-test</code>.</p>
+  <hr />
   <form id="testform">
     <label for="service">Service:</label>
     <select id="service" name="service">
@@ -67,6 +68,7 @@
         <fieldset id="" class="result-fieldset">
           <legend>Results</legend>
           <div id="results">
+            Generated TTS will appear here.
           </div>
         </fieldset>
       </div>
@@ -100,7 +102,6 @@
     }
 
     function makeMetadataTable(data) {
-      console.log(data)
       const metadata = data.metadata
       const utterance = data.utterance
       return `
@@ -145,7 +146,7 @@
       })
       const data = await res.json()
       const end = Date.now()
-      console.log('Generation complete. Time taken: %o.', end - start)
+      console.log('Generation complete. Time taken: %d.', Number(end - start))
 
       const table = makeMetadataTable(data.output)
       const audio = document.createElement('audio');
