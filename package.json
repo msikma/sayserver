@@ -19,8 +19,8 @@
     }
   },
   "scripts": {
-    "serve": "node dist/server.js",
-    "serve-test": "node dist/server.js --serve-test-endpoint",
+    "serve": "node dist/server.mjs",
+    "serve-test": "node dist/server.mjs --serve-test-endpoint",
     "build": "tsdown",
     "watch": "tsdown --watch src",
     "check": "tsc -p ./tsconfig.json --noEmit",
@@ -51,7 +51,7 @@
     "eslint": "^9.34.0",
     "jiti": "^2.5.1",
     "tsdown": "^0.22.0",
-    "typescript": "^5.9.2",
+    "typescript": "^6.0.0",
     "vitest": "^3.2.4"
   },
   "dependencies": {
