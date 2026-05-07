@@ -1,16 +1,16 @@
-import {defineConfig} from 'tsup'
+import {defineConfig} from 'tsdown'
 
 export default defineConfig({
   entry: {
     index: 'src/index.ts',
-    server: 'src/server/index.ts'
+    server: 'src/server/index.ts',
   },
-  splitting: true,
   minify: false,
   clean: true,
   shims: true,
   outDir: 'dist',
   format: 'esm',
   sourcemap: true,
-  dts: true
+  dts: true,
+  target: false,
 })
