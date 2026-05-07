@@ -3,7 +3,7 @@
     {
       "name": "SayServer",
       "script": "npm",
-      "args": ["run", "serve"],
+      "args": ["run", "serve-test"],
       "instances": "1",
       "autorestart": true,
       "watch": false,
