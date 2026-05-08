@@ -137,7 +137,7 @@
         set: sets
       }
       const start = Date.now()
-      const res = await fetch(`http://localhost:8227/api/generate`, {
+      const res = await fetch(new URL(`/api/generate`, window.location), {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
@@ -226,7 +226,7 @@
     }
 
     async function updateServices() {
-      const res = await fetch('http://localhost:8227/api/voices')
+      const res = await fetch(new URL('/api/voices', window.location))
       const services = await res.json()
       serviceData.services = services
       setup()
