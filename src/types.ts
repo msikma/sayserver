@@ -101,3 +101,18 @@ export interface CommandResult {
   exitCode: number | null
   abortSignal: AbortSignal | null
 }
+
+// Full response type for /api/voices.
+export interface ResVoices {
+  [key: string]: {
+    type: string
+    sets: string[]
+    voices: string[]
+  }
+}
+
+// Full response type for /api/generate.
+export interface ResGeneratedUtterance {
+  output: ResponseUtteranceData
+  time: string
+}
